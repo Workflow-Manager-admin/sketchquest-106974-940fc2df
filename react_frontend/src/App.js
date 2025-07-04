@@ -1,6 +1,152 @@
 import React, { useState, useEffect, useRef } from "react";
+import { increment as firestoreIncrement } from "firebase/firestore";
+
+import LoginPage from "./components/LoginPage";
+import SpinningWheelPanel from "./components/SpinningWheelPanel";
+import HomePage from "./components/HomePage";
+
+function MissingDrawingRecovery({ setCurrentUser, setAppStage }) {
+  // Hooks at top level
+  const [rejoining, setRejoining] = useState(false);
+  const errorReason =
+    "Your drawing could not be found for this round. This may occur if you reloaded at an unfortunate moment or there was a connection problem.";
+
+  const handleReturnToLogin = () => {
+    localStorage.removeItem("doodleFinderUser");
+    setCurrentUser(null);
+    setAppStage("entry");
+  };
+
+  return (
+    <div className="app-center" style={{ minHeight: "100vh", color: "#888" }}>
+      <div className="navbar"
+        style={{
+          fontFamily: "Comic Sans MS, Comic Sans, cursive",
+          fontSize: 30,
+          letterSpacing: 2,
+          fontWeight: 900,
+          color: "#3b82f6",
+          margin: "20px 0 28px 0",
+          textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
+        }}>
+        <span style={{ color: "#3b82f6" }}>Doodle</span>
+        <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
+        <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
+      </div>
+      <h2 style={{ margin: "40px 0 12px", color: "#d22" }}>
+        Oops! Something went wrong this round.
+      </h2>
+      <div style={{ marginBottom: 24, fontSize: 16 }}>
+        {errorReason}
+      </div>
+      <button
+        className="btn"
+        style={{
+          background: "#3b82f6",
+          color: "#fff",
+          fontSize: 17,
+          borderRadius: 8,
+          padding: "10px 28px",
+          marginRight: 7,
+        }}
+        onClick={handleReturnToLogin}
+      >
+        Return to Login
+      </button>
+      <button
+        className="btn"
+        style={{
+          background: "#f59e42",
+          color: "#fff",
+          fontSize: 17,
+          borderRadius: 8,
+          padding: "10px 28px",
+          marginLeft: 7,
+          opacity: rejoining ? 0.7 : 1
+        }}
+        disabled={rejoining}
+        onClick={() => window.location.reload()}
+      >
+        Refresh & Retry
+      </button>
+      <div style={{ marginTop: 26, fontSize: 13, color: "#888" }}>
+        If this keeps happening, check your internet connection.
+      </div>
+    </div>
+  );
+}
+
+/**
+ * AppErrorBoundary - React Error Boundary for user-facing error feedback
+ */
+class AppErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error: error, errorInfo: null };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    this.setState({ error, errorInfo });
+    if (window && window.console) console.error("App Fatal Error:", error, errorInfo);
+  }
+
+  handleReload = () => window.location.reload();
+  handleReturnToLogin = () => {
+    localStorage.removeItem("doodleFinderUser");
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="app-center" style={{ minHeight: "100vh", color: "#888" }}>
+          <div className="navbar"
+            style={{
+              fontFamily: "Comic Sans MS, Comic Sans, cursive",
+              fontSize: 30,
+              letterSpacing: 2,
+              fontWeight: 900,
+              color: "#3b82f6",
+              margin: "20px 0 28px 0",
+              textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
+            }}>
+            <span style={{ color: "#3b82f6" }}>Doodle</span>
+            <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
+            <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
+          </div>
+          <h2 style={{ margin: "40px 0 12px", color: "#d22" }}>
+            A critical error occurred.
+          </h2>
+          <div style={{ color: "#aa1111", marginBottom: 18, whiteSpace: "pre-line" }}>
+            {this.state.error ? String(this.state.error) : "Unknown error"}
+          </div>
+          <button className="btn" style={{
+            background: "#3b82f6", color: "#fff", fontSize: 17,
+            borderRadius: 8, padding: "10px 28px", marginRight: 7,
+          }} onClick={this.handleReturnToLogin}>
+            Return to Login
+          </button>
+          <button className="btn" style={{
+            background: "#f59e42", color: "#fff", fontSize: 17,
+            borderRadius: 8, padding: "10px 28px", marginLeft: 7
+          }} onClick={this.handleReload}>
+            Refresh App
+          </button>
+          <div style={{ marginTop: 26, fontSize: 13, color: "#888" }}>
+            If this keeps happening, please report it!
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import "./App.css";
-import { db, storage } from "./firebase";
+
 import {
   collection,
   addDoc,
@@ -158,56 +304,65 @@ function App() {
   // -- User Login/Join --
   // PUBLIC_INTERFACE
   async function handleLogin(username) {
-    // Check for collisions in players for current game
-    // Find latest game or create if none (status: topic)
-    let latestGameSnap = await getDocs(query(collection(db, "games"), orderBy("startTime", "desc")));
-    let gameDocId, exists = false;
-    if (!latestGameSnap.empty) {
-      const g = latestGameSnap.docs[0];
-      gameDocId = g.id;
-      const playersQ = collection(db, "games", g.id, "players");
-      const playersSnap = await getDocs(playersQ);
-      for (let p of playersSnap.docs)
-        if (p.data().username === username) { exists = true; break; }
+    try {
+      // Check for collisions in players for current game
+      // Find latest game or create if none (status: topic)
+      let latestGameSnap = await getDocs(query(collection(db, "games"), orderBy("startTime", "desc")));
+      let gameDocId, exists = false;
+      if (!latestGameSnap.empty) {
+        const g = latestGameSnap.docs[0];
+        gameDocId = g.id;
+        const playersQ = collection(db, "games", g.id, "players");
+        const playersSnap = await getDocs(playersQ);
+        for (let p of playersSnap.docs)
+          if (p.data().username === username) { exists = true; break; }
+      }
+      if (exists) throw new Error("Username already in use. Try another!");
+      const userId = "u" + Math.random().toString(36).substr(2, 9) + Date.now().toString().slice(-4);
+      localStorage.setItem("doodleFinderUser", JSON.stringify({ username, userId }));
+      setCurrentUser({ username, userId });
+      // Join/insert to players:
+      if (gameDocId) {
+        await setDoc(doc(db, "games", gameDocId, "players", userId), {
+          userId,
+          username,
+          joinedAt: serverTimestamp(),
+        }, { merge: true });
+      }
+      setAppStage("topic");
+    } catch (err) {
+      // Bubble up to LoginPage for user-facing error
+      throw err;
     }
-    if (exists) throw new Error("Username already in use. Try another!");
-    const userId = "u" + Math.random().toString(36).substr(2, 9) + Date.now().toString().slice(-4);
-    localStorage.setItem("doodleFinderUser", JSON.stringify({ username, userId }));
-    setCurrentUser({ username, userId });
-    // Join/insert to players:
-    if (gameDocId) {
-      await setDoc(doc(db, "games", gameDocId, "players", userId), {
-        userId,
-        username,
-        joinedAt: serverTimestamp(),
-      }, { merge: true });
-    }
-    setAppStage("topic");
   }
 
   // --- Start new round/game ---
   // PUBLIC_INTERFACE
   async function handleStartNewGame() {
-    if (!currentUser) return;
-    const newGameObj = {
-      status: "topic",
-      topic: null,
-      startTime: serverTimestamp(),
-    };
-    const gameDoc = await addDoc(collection(db, "games"), newGameObj);
-    setGameId(gameDoc.id);
-    await setDoc(
-      doc(db, "games", gameDoc.id, "players", currentUser.userId),
-      {
-        userId: currentUser.userId,
-        username: currentUser.username,
-        joinedAt: serverTimestamp(),
-      }, { merge: true }
-    );
-    setGameTopic(null);
-    setAppStage("topic");
-    setRoundTimerActive(false);
-    setCountdown(DRAW_TIME);
+    try {
+      if (!currentUser) return;
+      const newGameObj = {
+        status: "topic",
+        topic: null,
+        startTime: serverTimestamp(),
+      };
+      const gameDoc = await addDoc(collection(db, "games"), newGameObj);
+      setGameId(gameDoc.id);
+      await setDoc(
+        doc(db, "games", gameDoc.id, "players", currentUser.userId),
+        {
+          userId: currentUser.userId,
+          username: currentUser.username,
+          joinedAt: serverTimestamp(),
+        }, { merge: true }
+      );
+      setGameTopic(null);
+      setAppStage("topic");
+      setRoundTimerActive(false);
+      setCountdown(DRAW_TIME);
+    } catch (err) {
+      alert("Failed to start a new game. Check your connection and try again. " + (err.message || ""));
+    }
   }
 
   // --- Animated Topic Spinner & Assignment ---
@@ -215,27 +370,32 @@ function App() {
   async function handleSpinAndChooseTopic() {
     setTopicSpin({ spinning: true, selected: null, angle: 0 });
     let idx = Math.floor(Math.random() * GAME_TOPICS.length);
-    for (let t = 0; t < 35 + idx; t++) {
-      setTopicSpin((prev) => ({
-        spinning: true,
-        selected: GAME_TOPICS[t % GAME_TOPICS.length],
-        angle: (t % GAME_TOPICS.length) * (360 / GAME_TOPICS.length)
-      }));
-      await sleep(45 + Math.sqrt(t) * 6);
+    try {
+      for (let t = 0; t < 35 + idx; t++) {
+        setTopicSpin((prev) => ({
+          spinning: true,
+          selected: GAME_TOPICS[t % GAME_TOPICS.length],
+          angle: (t % GAME_TOPICS.length) * (360 / GAME_TOPICS.length)
+        }));
+        await sleep(45 + Math.sqrt(t) * 6);
+      }
+      // Save topic and move to drawing phase
+      if (gameId) {
+        await updateDoc(doc(db, "games", gameId), {
+          topic: GAME_TOPICS[idx],
+          status: "drawing",
+          drawStart: serverTimestamp(),
+        });
+      }
+      setGameTopic(GAME_TOPICS[idx]);
+      setTopicSpin({ spinning: false, selected: GAME_TOPICS[idx], angle: 0 });
+      setAppStage("drawing");
+      setCountdown(DRAW_TIME);
+      setRoundTimerActive(true);
+    } catch (err) {
+      alert("Failed to spin and assign topic. Try again! " + (err.message || ""));
+      setTopicSpin({ spinning: false, selected: null, angle: 0 });
     }
-    // Save topic and move to drawing phase
-    if (gameId) {
-      await updateDoc(doc(db, "games", gameId), {
-        topic: GAME_TOPICS[idx],
-        status: "drawing",
-        drawStart: serverTimestamp(),
-      });
-    }
-    setGameTopic(GAME_TOPICS[idx]);
-    setTopicSpin({ spinning: false, selected: GAME_TOPICS[idx], angle: 0 });
-    setAppStage("drawing");
-    setCountdown(DRAW_TIME);
-    setRoundTimerActive(true);
   }
 
   // --- Drawing Upload and Registration ---
@@ -248,54 +408,58 @@ function App() {
    *  4. Triggers UI routing to ensure all drawings are shown
    */
   async function handleDrawingSubmit(dataUrl) {
-    if (!currentUser || !gameId || !gameTopic) return;
-    const path =
-      "games/" + gameId + "/drawings/" + currentUser.userId + "_" + Date.now() + ".png";
-    const sref = storageRef(storage, path);
-    let url;
     try {
-      await uploadString(sref, dataUrl, "data_url");
-      url = await getDownloadURL(sref);
-    } catch (e) {
-      alert("There was an error saving your drawing. Please try again. " + e.message);
-      return;
-    }
+      if (!currentUser || !gameId || !gameTopic) return;
+      const path =
+        "games/" + gameId + "/drawings/" + currentUser.userId + "_" + Date.now() + ".png";
+      const sref = storageRef(storage, path);
+      let url;
+      try {
+        await uploadString(sref, dataUrl, "data_url");
+        url = await getDownloadURL(sref);
+      } catch (e) {
+        alert("There was an error saving your drawing. Please try again. " + e.message);
+        return;
+      }
 
-    // Save drawing in Firestore (with doc id as userId for dedup)
-    await setDoc(
-      doc(db, "games", gameId, "drawings", currentUser.userId),
-      {
+      // Save drawing in Firestore (with doc id as userId for dedup)
+      await setDoc(
+        doc(db, "games", gameId, "drawings", currentUser.userId),
+        {
+          userId: currentUser.userId,
+          username: currentUser.username,
+          drawingURL: url,
+          topic: gameTopic,
+          createdAt: serverTimestamp(),
+          votes: 0,
+        }
+      );
+      setMyDrawing({
         userId: currentUser.userId,
         username: currentUser.username,
         drawingURL: url,
         topic: gameTopic,
-        createdAt: serverTimestamp(),
-        votes: 0,
-      }
-    );
-    setMyDrawing({
-      userId: currentUser.userId,
-      username: currentUser.username,
-      drawingURL: url,
-      topic: gameTopic,
-    });
-
-    // After storing drawing: check if all players have submitted
-    // 1. Get all players
-    const playersSnap = await getDocs(collection(db, "games", gameId, "players"));
-    const playerIds = playersSnap.docs.map(doc => doc.id);
-    // 2. Get all drawings
-    const drawingsSnap = await getDocs(collection(db, "games", gameId, "drawings"));
-    const drawingIds = drawingsSnap.docs.map(doc => doc.id);
-
-    // 3. If all players have a drawing, advance stage to "main" (guessing phase)
-    // (If enabled for single-player test, still proceed)
-    const allSubmitted = playerIds.every(pid => drawingIds.includes(pid)) && playerIds.length > 0;
-    if (allSubmitted) {
-      await updateDoc(doc(db, "games", gameId), {
-        status: "main" // Could also be "guessing"
       });
-      setAppStage("main");
+
+      // After storing drawing: check if all players have submitted
+      // 1. Get all players
+      const playersSnap = await getDocs(collection(db, "games", gameId, "players"));
+      const playerIds = playersSnap.docs.map(doc => doc.id);
+      // 2. Get all drawings
+      const drawingsSnap = await getDocs(collection(db, "games", gameId, "drawings"));
+      const drawingIds = drawingsSnap.docs.map(doc => doc.id);
+
+      // 3. If all players have a drawing, advance stage to "main" (guessing phase)
+      // (If enabled for single-player test, still proceed)
+      const allSubmitted = playerIds.every(pid => drawingIds.includes(pid)) && playerIds.length > 0;
+      if (allSubmitted) {
+        await updateDoc(doc(db, "games", gameId), {
+          status: "main" // Could also be "guessing"
+        });
+        setAppStage("main");
+      }
+    } catch (err) {
+      alert("Failed to upload and register your drawing. Check your connection and retry. " + (err.message || ""));
     }
     // Otherwise, UI will update showing Doodle Submitted, waiting for others...
   }
@@ -309,69 +473,77 @@ function App() {
    *  - If guess is correct, owner of the drawing receives a point
    */
   async function handleGuess(drawingId, guessValue) {
-    if (!guessValue.trim() || !currentUser || !gameId) return;
-    const targetDrawing = drawings.find(d => d.id === drawingId);
-    if (!targetDrawing) return;
-    // Restrict guessing one's own drawing
-    if (targetDrawing.userId === currentUser.userId) return;
+    try {
+      if (!guessValue.trim() || !currentUser || !gameId) return;
+      const targetDrawing = drawings.find(d => d.id === drawingId);
+      if (!targetDrawing) return;
+      // Restrict guessing one's own drawing
+      if (targetDrawing.userId === currentUser.userId) return;
 
-    // Restrict to one guess per user per drawing
-    const existingGuessKey = `${currentUser.userId}_${drawingId}`;
-    const guessAlreadySubmitted = guesses.some(
-      (g) => g.userId === currentUser.userId && g.drawingId === drawingId
-    );
-    if (guessAlreadySubmitted) return;
+      // Restrict to one guess per user per drawing
+      const existingGuessKey = `${currentUser.userId}_${drawingId}`;
+      const guessAlreadySubmitted = guesses.some(
+        (g) => g.userId === currentUser.userId && g.drawingId === drawingId
+      );
+      if (guessAlreadySubmitted) return;
 
-    // Evaluate guess: correct if matches topic (case insensitive, ignores whitespace)
-    let isCorrect = false;
-    if (
-      guessValue.trim().toLowerCase() ===
-      targetDrawing.topic.trim().toLowerCase()
-    ) {
-      isCorrect = true;
-    }
-
-    // Save guess for this user/drawing
-    await setDoc(
-      doc(db, "games", gameId, "guesses", existingGuessKey),
-      {
-        guess: guessValue,
-        userId: currentUser.userId,
-        username: currentUser.username,
-        drawingId,
-        isCorrect,
-        submittedAt: serverTimestamp(),
+      // Evaluate guess: correct if matches topic (case insensitive, ignores whitespace)
+      let isCorrect = false;
+      if (
+        guessValue.trim().toLowerCase() ===
+        targetDrawing.topic.trim().toLowerCase()
+      ) {
+        isCorrect = true;
       }
-    );
 
-    // If guess is correct, increment owner's "points" field atomically
-    if (isCorrect && targetDrawing.userId) {
-      // Points for drawing owner
-      const drawingUserDoc = doc(db, "games", gameId, "players", targetDrawing.userId);
-      // Use Firestore increment for atomic update
-      await updateDoc(drawingUserDoc, {
-        points: (window.firebaseIncrement || (window.firebaseIncrement = (await import("firebase/firestore")).increment))(1),
-      }).catch(() => {}); // Player doc might not exist in local, ignore error for demo
+      // Save guess for this user/drawing
+      await setDoc(
+        doc(db, "games", gameId, "guesses", existingGuessKey),
+        {
+          guess: guessValue,
+          userId: currentUser.userId,
+          username: currentUser.username,
+          drawingId,
+          isCorrect,
+          submittedAt: serverTimestamp(),
+        }
+      );
+
+      // If guess is correct, increment owner's "points" field atomically
+      if (isCorrect && targetDrawing.userId) {
+        // Points for drawing owner
+        const drawingUserDoc = doc(db, "games", gameId, "players", targetDrawing.userId);
+        // Use Firestore increment for atomic update
+        await updateDoc(drawingUserDoc, {
+          points: firestoreIncrement(1),
+        }).catch(() => {}); // Safe for player docs that may not exist
+      }
+    } catch (err) {
+      alert("There was an error submitting your guess. Please check your connection and try again.");
     }
   }
 
   // --- Voting for a drawing ---
   // PUBLIC_INTERFACE
   async function handleVote(drawingId) {
-    if (!currentUser || !gameId || !drawingId || myDrawing?.id === drawingId) return;
-    // Only one vote per user
-    const alreadyVoted = votes.some(
-      (v) => v.userId === currentUser.userId
-    );
-    if (alreadyVoted) return;
-    await setDoc(
-      doc(db, "games", gameId, "votes", currentUser.userId),
-      {
-        userId: currentUser.userId,
-        forDrawingId: drawingId,
-        at: serverTimestamp(),
-      }
-    );
+    try {
+      if (!currentUser || !gameId || !drawingId || myDrawing?.id === drawingId) return;
+      // Only one vote per user
+      const alreadyVoted = votes.some(
+        (v) => v.userId === currentUser.userId
+      );
+      if (alreadyVoted) return;
+      await setDoc(
+        doc(db, "games", gameId, "votes", currentUser.userId),
+        {
+          userId: currentUser.userId,
+          forDrawingId: drawingId,
+          at: serverTimestamp(),
+        }
+      );
+    } catch (err) {
+      alert("Failed to submit your vote, please check your connection and try again!");
+    }
   }
 
   // ----- UI Rendering Switched by Stage ------
@@ -474,32 +646,18 @@ function App() {
   // --- ENFORCED USER FLOW FOR COMPETITION/RESULTS ---
   // HomePage: Only show guess input if at least one drawing is not by the current user
   if (appStage === "main" || appStage === "guessing") {
-    // Detect if there is at least one other user's drawing
+    // Detect if there is at least one other's drawing
     const otherDrawings = drawings.filter(
       (d) => currentUser && d.userId !== currentUser.userId
     );
-    // If user's own drawing not found (e.g., reload mid-round), soft fallback (shouldn't occur in normal play)
+
+    // If user's own drawing is missing (e.g., reload mid-round or data race), provide recovery options
     if (!myDrawing) {
       return (
-        <div className="app-center" style={{ minHeight: "100vh", color: "#888" }}>
-          <div className="navbar"
-            style={{
-              fontFamily: "Comic Sans MS, Comic Sans, cursive",
-              fontSize: 30,
-              letterSpacing: 2,
-              fontWeight: 900,
-              color: "#3b82f6",
-              margin: "20px 0 28px 0",
-              textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
-            }}>
-            <span style={{ color: "#3b82f6" }}>Doodle</span>
-            <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
-            <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
-          </div>
-          <h2>Something went wrong. Please refresh and re-join.</h2>
-        </div>
+        <MissingDrawingRecovery setCurrentUser={setCurrentUser} setAppStage={setAppStage} />
       );
     }
+
     return (
       <HomePage
         user={currentUser}
@@ -512,6 +670,7 @@ function App() {
         roundTimer={null}
         showGuessInput={otherDrawings.length !== 0}
         myUserId={currentUser.userId}
+        errorMessage={null}
       />
     );
   }
@@ -633,7 +792,13 @@ function App() {
 
 
 
-export default App;
+const AppExportWithBoundary = (props) => (
+  <AppErrorBoundary>
+    <App {...props} />
+  </AppErrorBoundary>
+);
+
+export default AppExportWithBoundary;
 
 // --- Topic Spinner ---
 function TopicSpinner({
