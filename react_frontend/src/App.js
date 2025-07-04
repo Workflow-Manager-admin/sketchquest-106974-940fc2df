@@ -381,7 +381,7 @@ function App() {
               <div style={{ marginBottom: 22, fontSize: 17, color: "#888" }}>
                 You have <b style={{ color: "#f59e42" }}>{countdown}</b> seconds!
               </div>
-              <DoodleCanvas onDrawingChange={() => {}} onDone={handleDrawingSubmit} disabled={false} />
+              <DoodleCanvas submitCb={handleDrawingSubmit} disabled={false} />
             </>
           ) : (
             <>
