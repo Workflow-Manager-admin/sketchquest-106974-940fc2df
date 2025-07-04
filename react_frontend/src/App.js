@@ -4,7 +4,6 @@ import { db, storage } from "./firebase";
 import {
   collection,
   addDoc,
-  getDoc,
   setDoc,
   getDocs,
   updateDoc,
@@ -13,7 +12,7 @@ import {
   query,
   orderBy,
   onSnapshot,
-  runTransaction,
+  getDoc as firestoreGetDoc,
 } from "firebase/firestore";
 import {
   ref as storageRef,
@@ -21,543 +20,526 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-// --- CONFIG ---
+// Modular imports
+import LoginPage from "./components/LoginPage";
+import SpinningWheelPanel from "./components/SpinningWheelPanel";
+import HomePage from "./components/HomePage";
+
+// Game topics and config
 const GAME_TOPICS = [
-  "Penguin",
-  "Owl",
-  "Parrot",
-  "Elephant",
-  "Kangaroo",
-  "Lion",
-  "Cat",
-  "Dog",
-  "Flamingo",
-  "Peacock",
-  "Raccoon",
-  "Rabbit",
-  "Fish",
-  "Giraffe",
-  "Tiger",
-  "Frog",
-  "Crab",
-  "Horse",
-  "Eagle",
-  "Swan",
+  "Penguin", "Owl", "Parrot", "Elephant", "Kangaroo", "Lion",
+  "Cat", "Dog", "Flamingo", "Peacock", "Raccoon", "Rabbit", "Fish",
+  "Giraffe", "Tiger", "Frog", "Crab", "Horse", "Eagle", "Swan"
 ];
 const DRAW_TIME = 30; // seconds
 
-// --- UTILITIES ---
-// PUBLIC_INTERFACE
-function randomElement(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-// PUBLIC_INTERFACE
-function useQueryCollectionSnapshot(q, onChange) {
-  useEffect(() => {
-    const unsub = onSnapshot(q, onChange);
-    return () => unsub();
-  }, [q, onChange]);
-}
-
-// --- COMPONENTS ---
-function DoodleFinder() {
-  // State
-  const [currentUser, setCurrentUser] = useState(null); // { username, userId }
-  const [stage, setStage] = useState("entry"); // entry | spinning | drawing | guessing | voting | result
-  const [gameData, setGameData] = useState(null); // { id,... }
-  const [allDrawings, setAllDrawings] = useState([]); // List of {id, userId, username, drawingURL, votes, topic}
-  const [myDrawingData, setMyDrawingData] = useState(null);
+// --- App Main ---
+function App() {
+  // Core state
+  const [currentUser, setCurrentUser] = useState(() => {
+    let cached = localStorage.getItem("doodleFinderUser");
+    return cached ? JSON.parse(cached) : null;
+  });
+  const [appStage, setAppStage] = useState("entry"); // entry | topic | drawing | main | voting | result
+  const [gameId, setGameId] = useState(null);
   const [topicSpin, setTopicSpin] = useState({
     spinning: false,
     selected: null,
     angle: 0,
   });
+  const [gameTopic, setGameTopic] = useState(null);
+  const [drawings, setDrawings] = useState([]); // {id, userId, username, drawingURL, topic}
+  const [guesses, setGuesses] = useState([]);   // {userId, username, guess, drawingId, isCorrect}
+  const [votes, setVotes] = useState([]);       // {userId, forDrawingId}
+  const [myDrawing, setMyDrawing] = useState(null);
   const [countdown, setCountdown] = useState(DRAW_TIME);
-  const [guessInput, setGuessInput] = useState("");
-  const [guesses, setGuesses] = useState([]);
-  const [hasVoted, setHasVoted] = useState(false);
-  const [winner, setWinner] = useState(null);
+  const [votingEnabled, setVotingEnabled] = useState(false);
+  const [roundTimerActive, setRoundTimerActive] = useState(false);
+  const [winnerDrawing, setWinnerDrawing] = useState(null);
 
-  // --- On mount: session/user management ---
+  // --- Game Session Bootstrap ---
   useEffect(() => {
-    let cached = localStorage.getItem("doodleFinderUser");
-    if (cached) {
-      setCurrentUser(JSON.parse(cached));
-      setStage("spinning");
-    }
-  }, []);
-
-  // --- Real-time game data subscription ---
-  useEffect(() => {
-    // Subscribe to the latest game (the document with the latest startTime)
+    // Subscribe to latest game doc
     const gamesQ = query(collection(db, "games"), orderBy("startTime", "desc"));
     const unsub = onSnapshot(gamesQ, (snap) => {
       if (!snap.empty) {
-        const d = { ...snap.docs[0].data(), id: snap.docs[0].id };
-        setGameData(d);
-        if (d.status === "drawing") setStage("drawing");
-        else if (d.status === "guessing") setStage("guessing");
-        else if (d.status === "voting") setStage("voting");
-        else if (d.status === "result") setStage("result");
+        const gameDoc = snap.docs[0];
+        setGameId(gameDoc.id);
+        const data = gameDoc.data();
+        setGameTopic(data.topic || null);
+        // Set stage based on status
+        if (data.status === "topic") setAppStage("topic");
+        else if (data.status === "drawing") setAppStage("drawing");
+        else if (data.status === "guessing" || data.status === "main") setAppStage("main");
+        else if (data.status === "voting") {
+          setAppStage("voting");
+          setVotingEnabled(true);
+        }
+        else if (data.status === "result") setAppStage("result");
+        if (data.status !== "voting") setVotingEnabled(false);
       }
     });
     return unsub;
   }, []);
 
-  // --- Real-time drawings (after gameData available) ---
+  // --- User Drawing Subscription ---
   useEffect(() => {
-    if (!gameData) return;
-    const drawingsQ = query(
-      collection(db, "games", gameData.id, "drawings"),
-      orderBy("createdAt")
-    );
+    if (!gameId) return;
+    const drawingsQ = query(collection(db, "games", gameId, "drawings"), orderBy("createdAt"));
     const unsub = onSnapshot(drawingsQ, (snap) => {
-      const items = [];
-      snap.forEach((doc) => {
-        items.push({ id: doc.id, ...doc.data() });
-      });
-      setAllDrawings(items);
-      // Find my drawing (if present)
+      let items = [];
+      snap.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
+      setDrawings(items);
       if (currentUser)
-        setMyDrawingData(
-          items.find((i) => i.userId === currentUser.userId) || null
-        );
+        setMyDrawing(items.find(i => i.userId === currentUser.userId) || null);
     });
     return unsub;
-    // eslint-disable-next-line
-  }, [gameData, currentUser]);
+  }, [gameId, currentUser]);
 
-  // --- Real-time guesses (only for this round) ---
+  // Guesses subscription (real-time)
   useEffect(() => {
-    if (!gameData || stage !== "guessing") return;
-    const guessesQ = collection(db, "games", gameData.id, "guesses");
+    if (!gameId) return;
+    const guessesQ = collection(db, "games", gameId, "guesses");
     const unsub = onSnapshot(guessesQ, (snap) => {
       const gs = [];
-      snap.forEach((doc) => gs.push(doc.data()));
+      snap.forEach(doc => gs.push(doc.data()));
       setGuesses(gs);
     });
     return unsub;
-  }, [gameData, stage]);
+  }, [gameId]);
 
-  // --- Real-time votes ---
+  // Votes subscription
   useEffect(() => {
-    if (!gameData || stage !== "voting") return;
-    const votesQ = collection(db, "games", gameData.id, "votes");
+    if (!gameId) return;
+    const votesQ = collection(db, "games", gameId, "votes");
     const unsub = onSnapshot(votesQ, (snap) => {
-      const raw = [];
-      snap.forEach((doc) => raw.push(doc.data()));
-      // Calculate vote counts per drawing
-      if (allDrawings.length === 0) return;
-      const idToVotes = {};
-      allDrawings.forEach((d) => (idToVotes[d.id] = 0));
-      raw.forEach((v) => {
-        if (v.forDrawingId && idToVotes[v.forDrawingId] !== undefined)
-          idToVotes[v.forDrawingId]++;
-      });
-      setAllDrawings((prev) =>
-        prev.map((d) => ({
-          ...d,
-          votes: idToVotes[d.id] || 0,
-        }))
-      );
-      // Winner?
-      if (gameData?.status === "result") {
-        let max = -1;
-        let win = null;
-        for (let dr of allDrawings) {
-          const v = idToVotes[dr.id] || 0;
-          if (v > max) {
-            max = v;
-            win = dr;
-          }
+      const vs = [];
+      snap.forEach(doc => vs.push(doc.data()));
+      setVotes(vs);
+      // Winner detection (for result stage)
+      if (appStage === "result" && drawings.length) {
+        const votesCount = {};
+        drawings.forEach(d => (votesCount[d.id] = 0));
+        vs.forEach(v => { if (v.forDrawingId) votesCount[v.forDrawingId]++; });
+        let max = -1, win = null;
+        for (let dr of drawings) {
+          const v = votesCount[dr.id] || 0;
+          if (v > max) { max = v; win = dr; }
         }
-        if (win) setWinner(win);
+        setWinnerDrawing(win);
       }
     });
     return unsub;
     // eslint-disable-next-line
-  }, [gameData, stage, allDrawings.length]);
+  }, [gameId, appStage, drawings.length]);
 
-  // --- Countdown logic for drawing phase ---
+  // Countdown for drawing phase
   useEffect(() => {
-    if (stage !== "drawing") {
+    if (appStage !== "drawing") {
       setCountdown(DRAW_TIME);
+      setRoundTimerActive(false);
       return;
     }
+    setRoundTimerActive(true);
     if (countdown === 0) {
-      setTimeout(() => setStage("guessing"), 1000);
+      setTimeout(() => setAppStage("main"), 900);
+      setRoundTimerActive(false);
       return;
     }
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line
-  }, [countdown, stage]);
+  }, [appStage, countdown]);
 
+  // -- User Login/Join --
   // PUBLIC_INTERFACE
-  async function handleUserEntry(name) {
-    // Check for collision (username uniqueness)
-    const latestGameSnap = await getDocs(
-      query(collection(db, "games"), orderBy("startTime", "desc"))
-    );
-    let exists = false;
+  async function handleLogin(username) {
+    // Check for collisions in players for current game
+    // Find latest game or create if none (status: topic)
+    let latestGameSnap = await getDocs(query(collection(db, "games"), orderBy("startTime", "desc")));
+    let gameDocId, exists = false;
     if (!latestGameSnap.empty) {
-      const gameId = latestGameSnap.docs[0].id;
-      const playersQ = collection(db, "games", gameId, "players");
+      const g = latestGameSnap.docs[0];
+      gameDocId = g.id;
+      const playersQ = collection(db, "games", g.id, "players");
       const playersSnap = await getDocs(playersQ);
-      for (let p of playersSnap.docs) {
-        if (p.data().username === name) {
-          exists = true;
-          break;
-        }
-      }
+      for (let p of playersSnap.docs)
+        if (p.data().username === username) { exists = true; break; }
     }
-    if (exists) {
-      alert("This username is already taken. Please choose another.");
-      return;
+    if (exists) throw new Error("Username already in use. Try another!");
+    const userId = "u" + Math.random().toString(36).substr(2, 9) + Date.now().toString().slice(-4);
+    localStorage.setItem("doodleFinderUser", JSON.stringify({ username, userId }));
+    setCurrentUser({ username, userId });
+    // Join/insert to players:
+    if (gameDocId) {
+      await setDoc(doc(db, "games", gameDocId, "players", userId), {
+        userId,
+        username,
+        joinedAt: serverTimestamp(),
+      }, { merge: true });
     }
-    const uid =
-      "u" +
-      Math.random().toString(36).substr(2, 9) +
-      Date.now().toString().slice(-4);
-    localStorage.setItem(
-      "doodleFinderUser",
-      JSON.stringify({ username: name, userId: uid })
-    );
-    setCurrentUser({ username: name, userId: uid });
-    setStage("spinning");
-    // Add to players
-    if (!latestGameSnap.empty) {
-      const gameId = latestGameSnap.docs[0].id;
-      await setDoc(
-        doc(db, "games", gameId, "players", uid),
-        {
-          userId: uid,
-          username: name,
-          joinedAt: serverTimestamp(),
-        },
-        { merge: true }
-      );
-    }
+    setAppStage("topic");
   }
 
+  // --- Start new round/game ---
   // PUBLIC_INTERFACE
-  async function startNewGame() {
-    // Only for first user or to force cycle
-    const game = {
-      status: "drawing",
-      topic: null, // will spin
+  async function handleStartNewGame() {
+    if (!currentUser) return;
+    const newGameObj = {
+      status: "topic",
+      topic: null,
       startTime: serverTimestamp(),
     };
-    const gameDoc = await addDoc(collection(db, "games"), game);
-    // Also add self to players
+    const gameDoc = await addDoc(collection(db, "games"), newGameObj);
+    setGameId(gameDoc.id);
     await setDoc(
       doc(db, "games", gameDoc.id, "players", currentUser.userId),
       {
         userId: currentUser.userId,
         username: currentUser.username,
         joinedAt: serverTimestamp(),
-      },
-      { merge: true }
+      }, { merge: true }
     );
-    setStage("spinning");
-    setGameData({ ...game, id: gameDoc.id });
-    // Topic will be picked after spinner
+    setGameTopic(null);
+    setAppStage("topic");
+    setRoundTimerActive(false);
+    setCountdown(DRAW_TIME);
   }
 
+  // --- Animated Topic Spinner & Assignment ---
   // PUBLIC_INTERFACE
-  async function handleSpinAndPickTopic() {
-    // Animate and submit chosen topic
+  async function handleSpinAndChooseTopic() {
     setTopicSpin({ spinning: true, selected: null, angle: 0 });
     let idx = Math.floor(Math.random() * GAME_TOPICS.length);
-    let angle = 0;
     for (let t = 0; t < 35 + idx; t++) {
       setTopicSpin((prev) => ({
         spinning: true,
         selected: GAME_TOPICS[t % GAME_TOPICS.length],
-        angle: (t % GAME_TOPICS.length) * (360 / GAME_TOPICS.length),
+        angle: (t % GAME_TOPICS.length) * (360 / GAME_TOPICS.length)
       }));
-      // linear slow down
       await sleep(45 + Math.sqrt(t) * 6);
     }
-    // Save topic to gameData
-    await updateDoc(doc(db, "games", gameData.id), {
-      topic: GAME_TOPICS[idx],
-      status: "drawing",
-      drawStart: serverTimestamp(),
-    });
+    // Save topic and move to drawing phase
+    if (gameId) {
+      await updateDoc(doc(db, "games", gameId), {
+        topic: GAME_TOPICS[idx],
+        status: "drawing",
+        drawStart: serverTimestamp(),
+      });
+    }
+    setGameTopic(GAME_TOPICS[idx]);
     setTopicSpin({ spinning: false, selected: GAME_TOPICS[idx], angle: 0 });
-    setStage("drawing");
+    setAppStage("drawing");
+    setCountdown(DRAW_TIME);
+    setRoundTimerActive(true);
   }
 
+  // --- Drawing Upload and Registration ---
   // PUBLIC_INTERFACE
-  async function uploadDrawing(dataUrl) {
-    // Upload to Firebase Storage
+  async function handleDrawingSubmit(dataUrl) {
+    if (!currentUser || !gameId || !gameTopic) return;
     const path =
-      "games/" +
-      gameData.id +
-      "/drawings/" +
-      currentUser.userId +
-      "_" +
-      Date.now() +
-      ".png";
+      "games/" + gameId + "/drawings/" + currentUser.userId + "_" + Date.now() + ".png";
     const sref = storageRef(storage, path);
     await uploadString(sref, dataUrl, "data_url");
     const url = await getDownloadURL(sref);
-    // Store in Firestore
     await setDoc(
-      doc(db, "games", gameData.id, "drawings", currentUser.userId),
+      doc(db, "games", gameId, "drawings", currentUser.userId),
       {
         userId: currentUser.userId,
         username: currentUser.username,
         drawingURL: url,
-        topic: gameData.topic,
+        topic: gameTopic,
         createdAt: serverTimestamp(),
         votes: 0,
       }
     );
+    setMyDrawing({
+      userId: currentUser.userId,
+      username: currentUser.username,
+      drawingURL: url,
+      topic: gameTopic,
+    });
+    // Do not advance stage: wait for admin or timer to trigger phase switch
   }
 
+  // --- Guess submission for a drawing ---
   // PUBLIC_INTERFACE
-  async function submitGuess() {
-    if (!guessInput.trim()) return;
-    // No points, for fun
+  async function handleGuess(drawingId, guessValue) {
+    if (!guessValue.trim() || !currentUser || !gameId) return;
+    // Evaluate guess: The guess is correct if lowercase matches the topic (for that drawing)
+    const targetDrawing = drawings.find(d => d.id === drawingId);
+    let isCorrect = false;
+    if (targetDrawing && guessValue.trim().toLowerCase() === targetDrawing.topic.trim().toLowerCase()) {
+      isCorrect = true;
+    }
+    // Save guess for this user/drawing only if not already present
     await setDoc(
-      doc(db, "games", gameData.id, "guesses", currentUser.userId),
+      doc(db, "games", gameId, "guesses", `${currentUser.userId}_${drawingId}`),
       {
-        guess: guessInput,
+        guess: guessValue,
         userId: currentUser.userId,
         username: currentUser.username,
+        drawingId,
+        isCorrect,
         submittedAt: serverTimestamp(),
       }
     );
-    setGuessInput("");
   }
 
+  // --- Voting for a drawing ---
   // PUBLIC_INTERFACE
-  async function castVote(drawingId) {
-    if (
-      hasVoted ||
-      !drawingId ||
-      (myDrawingData && drawingId === myDrawingData.id)
-    )
-      return;
+  async function handleVote(drawingId) {
+    if (!currentUser || !gameId || !drawingId || myDrawing?.id === drawingId) return;
+    // Only one vote per user
+    const alreadyVoted = votes.some(
+      (v) => v.userId === currentUser.userId
+    );
+    if (alreadyVoted) return;
     await setDoc(
-      doc(db, "games", gameData.id, "votes", currentUser.userId),
+      doc(db, "games", gameId, "votes", currentUser.userId),
       {
         userId: currentUser.userId,
         forDrawingId: drawingId,
         at: serverTimestamp(),
       }
     );
-    setHasVoted(true);
   }
 
-  // --- Stage-based views ---
-  if (!currentUser || stage === "entry")
+  // ----- UI Rendering Switched by Stage ------
+  if (!currentUser || appStage === "entry") {
     return (
-      <UsernameEntry
-        onSubmit={handleUserEntry}
+      <LoginPage
+        onLogin={handleLogin}
         accentColor="#f59e42"
         primaryColor="#3b82f6"
       />
     );
+  }
 
-  if (!gameData)
+  // Topic spinning wheel
+  if (appStage === "topic") {
+    return (
+      <SpinningWheelPanel
+        topics={GAME_TOPICS}
+        topicSpin={topicSpin}
+        onSpin={handleSpinAndChooseTopic}
+        selectedTopic={topicSpin.selected}
+        disabled={topicSpin.spinning}
+      />
+    );
+  }
+
+  // Drawing Canvas & Timer (inline)
+  if (appStage === "drawing") {
+    // DoodleCanvas inline here to keep output within one file for simplicity
+    // (as subtask did not request splitting this part)
     return (
       <div className="app-center">
-        <GameHeader />
-        <div className="modern-loader" />
-        <div style={{ marginTop: 24, color: "#888" }}>
-          Connecting to game...
-          <p>
-            <button className="btn" onClick={startNewGame}>
-              Start New Game
-            </button>
-          </p>
+        <div className="navbar" style={{
+          fontFamily: "Comic Sans MS, Comic Sans, cursive",
+          fontSize: 30,
+          letterSpacing: 2,
+          fontWeight: 900,
+          color: "#3b82f6",
+          margin: "20px 0 28px 0",
+          textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
+        }}>
+          <span style={{ color: "#3b82f6" }}>Doodle</span>
+          <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
+          <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
+        </div>
+        <div className="card" style={{
+          background: myDrawing ? "#f8f6f1" : "#fcfdfd",
+          padding: 30,
+          borderRadius: 18,
+          margin: "0 auto",
+        }}>
+          <div style={{ marginBottom: 12 }}>
+            <span style={{
+              display: "inline-block",
+              background: "#fff6e6",
+              color: "#f59e42",
+              borderRadius: 12,
+              padding: "8px 18px",
+              fontWeight: 800,
+              fontSize: 22,
+              fontFamily: "Comic Sans MS, Comic Sans, cursive",
+              letterSpacing: 2,
+              boxShadow: "0px 1px 7px #f59e427e",
+              border: "2.2px solid #f59e42"
+            }}>
+              Topic: {gameTopic}
+            </span>
+          </div>
+          {!myDrawing ? (
+            <>
+              <h2 style={{ color: "#3b82f6" }}>Draw this!</h2>
+              <div style={{ marginBottom: 22, fontSize: 17, color: "#888" }}>
+                You have <b style={{ color: "#f59e42" }}>{countdown}</b> seconds!
+              </div>
+              <DoodleCanvas onDrawingChange={() => {}} onDone={handleDrawingSubmit} disabled={false} />
+            </>
+          ) : (
+            <>
+              <h2 style={{ color: "#3b82f6" }}>Doodle Submitted!</h2>
+              <div style={{ fontSize: 18, color: "#666", margin: "18px 0" }}>
+                Waiting for others to finish...
+              </div>
+              <img
+                src={myDrawing.drawingURL}
+                alt="your doodle"
+                style={{
+                  width: "235px",
+                  boxShadow: "0 2px 16px 0 #eccc9c",
+                  border: "4px solid #f59e42",
+                  margin: "16px 0",
+                }}
+              />
+            </>
+          )}
         </div>
       </div>
     );
+  }
 
-  if (stage === "spinning" && !gameData.topic)
+  // Main Home Guess/Results Round
+  if (appStage === "main" || appStage === "guessing") {
     return (
-      <TopicSpinner
-        topics={GAME_TOPICS}
-        topicSpin={topicSpin}
-        onSpin={handleSpinAndPickTopic}
+      <HomePage
         user={currentUser}
-        gameStarted={!!gameData.startTime}
-        startNewGame={startNewGame}
-      />
-    );
-  if (stage === "drawing")
-    return (
-      <DrawingPanel
-        topic={gameData.topic}
-        onSubmit={uploadDrawing}
-        countdown={countdown}
-        myDrawingData={myDrawingData}
-        accentColor="#f59e42"
-      />
-    );
-  if (stage === "guessing")
-    return (
-      <GuessingPanel
-        allDrawings={allDrawings}
-        myDrawingData={myDrawingData}
-        guessInput={guessInput}
-        setGuessInput={setGuessInput}
-        submitGuess={submitGuess}
+        drawings={drawings}
         guesses={guesses}
+        votes={votes}
+        onGuess={handleGuess}
+        onVote={handleVote}
+        votingEnabled={false}
+        roundTimer={null}
       />
     );
-  if (stage === "voting")
-    return (
-      <VotingPanel
-        allDrawings={allDrawings}
-        myDrawingData={myDrawingData}
-        hasVoted={hasVoted}
-        castVote={castVote}
-      />
-    );
-  if (stage === "result")
-    return (
-      <WinnerPanel
-        allDrawings={allDrawings}
-        winner={winner}
-        user={currentUser}
-        onPlayAgain={startNewGame}
-      />
-    );
+  }
 
+  // Voting phase
+  if (appStage === "voting") {
+    return (
+      <HomePage
+        user={currentUser}
+        drawings={drawings}
+        guesses={guesses}
+        votes={votes}
+        onGuess={() => {}}
+        onVote={handleVote}
+        votingEnabled={true}
+        roundTimer={null}
+      />
+    );
+  }
+
+  // Result phase
+  if (appStage === "result") {
+    return (
+      <div className="app-center">
+        <div className="navbar"
+          style={{
+            fontFamily: "Comic Sans MS, Comic Sans, cursive",
+            fontSize: 30,
+            letterSpacing: 2,
+            fontWeight: 900,
+            color: "#3b82f6",
+            margin: "20px 0 28px 0",
+            textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
+          }}
+        >
+          <span style={{ color: "#3b82f6" }}>Doodle</span>
+          <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
+          <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
+        </div>
+        <div className="card" style={{
+          padding: 30,
+          borderRadius: 17,
+          background: "#fcfdfd",
+          margin: "0 auto",
+        }}>
+          <h1 style={{ color: "#3b82f6" }}>🎉 Winner!</h1>
+          <div style={{ fontSize: 26, margin: "10px 0", color: "#f59e42" }}>
+            {winnerDrawing?.username === currentUser.username
+              ? "You are the Winner! 🏆"
+              : `${winnerDrawing?.username} wins the round!`}
+          </div>
+          <img
+            src={winnerDrawing?.drawingURL}
+            alt="winning doodle"
+            style={{
+              width: 200,
+              border: "6px solid #3b82f6",
+              borderRadius: 20,
+              boxShadow: "0 3px 16px #aacffd",
+              margin: "28px 0",
+            }}
+          />
+          <div style={{ margin: "15px 0" }}>
+            <span style={{ color: "#888" }}>Drawing Topic: </span>
+            <span style={{ color: "#222", fontWeight: 700, fontSize: 18 }}>
+              {winnerDrawing?.topic}
+            </span>
+          </div>
+          <div style={{ margin: "21px 0" }}>
+            <table style={{ width: "100%", borderSpacing: 0 }}>
+              <thead>
+                <tr>
+                  <th style={{ color: "#555", fontWeight: 600 }}>Player</th>
+                  <th style={{ color: "#555", fontWeight: 600 }}>Votes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...drawings]
+                  .sort((a, b) => (b.votes || 0) - (a.votes || 0))
+                  .map((d, ix) => (
+                    <tr
+                      key={d.id}
+                      style={{
+                        background:
+                          ix === 0
+                            ? "#fffde8"
+                            : ix === 1
+                            ? "#f1f8ff"
+                            : undefined,
+                      }}
+                    >
+                      <td style={{ color: "#3b82f6", fontWeight: 500, padding: 5 }}>
+                        {d.username}
+                        {currentUser.username === d.username && " (You)"}
+                      </td>
+                      <td style={{ color: "#f59e42", fontWeight: 700 }}>
+                        {d.votes || 0}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+          <button
+            className="btn"
+            style={{ background: "#3b82f6", color: "#fff", fontSize: 18, borderRadius: 9, padding: "12px 34px" }}
+            onClick={handleStartNewGame}
+          >
+            Play Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // fallback
   return <div>Invalid state</div>;
 }
 
-// --- Username Entry ---
-function UsernameEntry({ onSubmit, accentColor, primaryColor }) {
-  const [name, setName] = useState("");
-  const [error, setError] = useState(null);
 
-  /**
-   * Handles submission of the username form.
-   * Trims and validates the input; invokes onSubmit if all checks pass.
-   * Displays error message on failure.
-   */
-  // PUBLIC_INTERFACE
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const username = name.trim();
-    if (username.length < 2) {
-      setError("Username must be at least 2 characters.");
-      return;
-    }
-    setError(null);
-    try {
-      await onSubmit(username);
-    } catch (err) {
-      setError(
-        err && err.message
-          ? err.message
-          : "Failed to join game. Try another username."
-      );
-    }
-  };
 
-  return (
-    <div
-      className="app-center"
-      style={{ height: "100vh", justifyContent: "center" }}
-    >
-      <GameHeader />
-      <div
-        className="card"
-        style={{
-          padding: 36,
-          margin: "0 auto",
-          borderRadius: 20,
-          background: "#fcfdfd",
-        }}
-      >
-        <h2 className="title" style={{ color: primaryColor, letterSpacing: 2 }}>
-          Welcome to <span style={{ color: accentColor }}>Doodle Finder!</span>
-        </h2>
-        <div style={{ fontSize: 18, marginBottom: 36 }}>
-          Enter a unique username to join the live game:
-        </div>
-        <form onSubmit={handleSubmit} autoComplete="off">
-          <input
-            className="modern-input"
-            style={{
-              fontSize: 22,
-              padding: 10,
-              borderRadius: 8,
-              borderColor: primaryColor,
-            }}
-            placeholder="Username (no email, just a fun name!)"
-            maxLength={15}
-            autoFocus
-            value={name}
-            required
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                // allow Enter to submit if enabled, block otherwise
-                if (name.trim().length < 2) {
-                  e.preventDefault();
-                }
-              }
-            }}
-            onChange={(e) => {
-              setName(e.target.value);
-              if (error) setError(null);
-            }}
-          />
-          <br />
-          <button
-            className="btn"
-            style={{
-              background: primaryColor,
-              color: "#fff",
-              padding: "12px 36px",
-              fontSize: 22,
-              marginTop: 16,
-              borderRadius: 8,
-              letterSpacing: 1,
-              cursor: name.length >= 2 ? "pointer" : "not-allowed",
-              opacity: name.length >= 2 ? 1 : 0.66,
-            }}
-            type="submit"
-            disabled={name.length < 2}
-            tabIndex={0}
-          >
-            Enter Game
-          </button>
-          {error && (
-            <div
-              style={{
-                color: "#d22",
-                fontWeight: 500,
-                marginTop: 16,
-                fontSize: 15,
-              }}
-              aria-live="polite"
-              role="alert"
-            >
-              {error}
-            </div>
-          )}
-        </form>
-      </div>
-      <div style={{ marginTop: 44, opacity: 0.8 }}>
-        <small>
-          No signup required. Usernames must be unique during each session.
-        </small>
-      </div>
-    </div>
-  );
-}
+export default App;
 
 // --- Topic Spinner ---
 function TopicSpinner({
@@ -1210,4 +1192,3 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // PUBLIC_INTERFACE
-export default DoodleFinder;
