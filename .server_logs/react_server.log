@@ -6,130 +6,19 @@ Attempting to bind to HOST environment variable: 0.0.0.0
 If this was unintentional, check that you haven't mistakenly set it in your shell.
 Learn more here: https://cra.link/advanced-config
 
-(node:19359) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:20006) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:19359) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:20006) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
-Failed to compile.
+Compiled successfully!
 
-[eslint] 
-src/App.js
-Syntax error: Identifier 'LoginPage' has already been declared. (171:7) (171:7)
-ERROR in ./src/App.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/src/App.js: Identifier 'LoginPage' has already been declared. (171:7)
+You can now view react-kavia in the browser.
 
-  169 |
-  170 | // Modular imports
-> 171 | import LoginPage from "./components/LoginPage";
-      |        ^
-  172 | import SpinningWheelPanel from "./components/SpinningWheelPanel";
-  173 | import HomePage from "./components/HomePage";
-  174 |
-    at constructor (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:360:19)
-    at FlowParserMixin.raise (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:3327:19)
-    at FlowScopeHandler.checkRedeclarationInScope (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1555:19)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1521:12)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1622:11)
-    at FlowParserMixin.declareNameFromIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7476:16)
-    at FlowParserMixin.checkIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7472:12)
-    at FlowParserMixin.checkLVal (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7413:12)
-    at FlowParserMixin.finishImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13898:10)
-    at FlowParserMixin.parseImportSpecifierLocal (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5605:31)
-    at FlowParserMixin.maybeParseDefaultImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14001:12)
-    at FlowParserMixin.parseImportSpecifiersAndAfter (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13872:29)
-    at FlowParserMixin.parseImport (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13868:17)
-    at FlowParserMixin.parseStatementContent (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12514:27)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12406:17)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5140:24)
-    at FlowParserMixin.parseModuleItem (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12383:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12960:36)
-    at FlowParserMixin.parseBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12953:10)
-    at FlowParserMixin.parseProgram (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12280:10)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12270:25)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5909:28)
-    at FlowParserMixin.parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14120:10)
-    at parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14154:38)
-    at parser (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/parser/index.js:41:34)
-    at parser.next (<anonymous>)
-    at normalizeFile (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
-    at normalizeFile.next (<anonymous>)
-    at run (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/index.js:22:50)
-    at run.next (<anonymous>)
-    at transform (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transform.js:22:33)
-    at transform.next (<anonymous>)
-    at step (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:261:32)
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:273:13
-    at async.call.result.err.err (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:223:11)
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:189:28
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:113:33
-    at step (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:287:14)
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:273:13
-    at async.call.result.err.err (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:223:11)
+  Local:            http://localhost:3000
+  On Your Network:  http://172.17.0.2:3000
 
-ERROR in [eslint] 
-src/App.js
-  Line 171:7:  Parsing error: Identifier 'LoginPage' has already been declared. (171:7)
+Note that the development build is not optimized.
+To create a production build, use npm run build.
 
-webpack compiled with 2 errors
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 514:10:  'MissingDrawingRecovery' is not defined  react/jsx-no-undef
-  Line 653:4:   'AppErrorBoundary' is not defined        react/jsx-no-undef
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 22:13:    'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 64:10:    'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 65:10:    'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 661:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 777:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 984:10:   'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1078:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1163:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 514:10:  'MissingDrawingRecovery' is not defined  react/jsx-no-undef
-  Line 653:4:   'AppErrorBoundary' is not defined        react/jsx-no-undef
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Compiled with warnings.
-
-[eslint] 
-src/App.js
-  Line 22:13:    'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 119:21:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 208:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 209:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 805:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 921:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1128:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1222:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1307:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in [eslint] 
-src/App.js
-  Line 22:13:    'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 119:21:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 208:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 209:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 805:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 921:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1128:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1222:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1307:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-webpack compiled with 1 warning
+webpack compiled successfully
