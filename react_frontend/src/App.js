@@ -439,32 +439,80 @@ function DoodleFinder() {
 // --- Username Entry ---
 function UsernameEntry({ onSubmit, accentColor, primaryColor }) {
   const [name, setName] = useState("");
+  const [error, setError] = useState(null);
+
+  /**
+   * Handles submission of the username form.
+   * Trims and validates the input; invokes onSubmit if all checks pass.
+   * Displays error message on failure.
+   */
+  // PUBLIC_INTERFACE
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const username = name.trim();
+    if (username.length < 2) {
+      setError("Username must be at least 2 characters.");
+      return;
+    }
+    setError(null);
+    try {
+      await onSubmit(username);
+    } catch (err) {
+      setError(
+        err && err.message
+          ? err.message
+          : "Failed to join game. Try another username."
+      );
+    }
+  };
+
   return (
-    <div className="app-center" style={{ height: "100vh", justifyContent: "center" }}>
+    <div
+      className="app-center"
+      style={{ height: "100vh", justifyContent: "center" }}
+    >
       <GameHeader />
-      <div className="card" style={{ padding: 36, margin: "0 auto", borderRadius: 20, background: "#fcfdfd" }}>
+      <div
+        className="card"
+        style={{
+          padding: 36,
+          margin: "0 auto",
+          borderRadius: 20,
+          background: "#fcfdfd",
+        }}
+      >
         <h2 className="title" style={{ color: primaryColor, letterSpacing: 2 }}>
           Welcome to <span style={{ color: accentColor }}>Doodle Finder!</span>
         </h2>
         <div style={{ fontSize: 18, marginBottom: 36 }}>
           Enter a unique username to join the live game:
         </div>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (name.trim().length < 2) return;
-            onSubmit(name.trim());
-          }}
-        >
+        <form onSubmit={handleSubmit} autoComplete="off">
           <input
             className="modern-input"
-            style={{ fontSize: 22, padding: 10, borderRadius: 8, borderColor: primaryColor }}
+            style={{
+              fontSize: 22,
+              padding: 10,
+              borderRadius: 8,
+              borderColor: primaryColor,
+            }}
             placeholder="Username (no email, just a fun name!)"
             maxLength={15}
             autoFocus
             value={name}
             required
-            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                // allow Enter to submit if enabled, block otherwise
+                if (name.trim().length < 2) {
+                  e.preventDefault();
+                }
+              }
+            }}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (error) setError(null);
+            }}
           />
           <br />
           <button
@@ -477,13 +525,29 @@ function UsernameEntry({ onSubmit, accentColor, primaryColor }) {
               marginTop: 16,
               borderRadius: 8,
               letterSpacing: 1,
-              cursor: "pointer",
+              cursor: name.length >= 2 ? "pointer" : "not-allowed",
+              opacity: name.length >= 2 ? 1 : 0.66,
             }}
             type="submit"
             disabled={name.length < 2}
+            tabIndex={0}
           >
             Enter Game
           </button>
+          {error && (
+            <div
+              style={{
+                color: "#d22",
+                fontWeight: 500,
+                marginTop: 16,
+                fontSize: 15,
+              }}
+              aria-live="polite"
+              role="alert"
+            >
+              {error}
+            </div>
+          )}
         </form>
       </div>
       <div style={{ marginTop: 44, opacity: 0.8 }}>
