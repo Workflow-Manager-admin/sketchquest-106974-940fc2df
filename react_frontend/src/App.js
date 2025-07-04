@@ -240,13 +240,28 @@ function App() {
 
   // --- Drawing Upload and Registration ---
   // PUBLIC_INTERFACE
+  /**
+   * Handles drawing submission:
+   *  1. Uploads image to Firebase Storage
+   *  2. Saves document to Firestore under "drawings"
+   *  3. Checks if all players have submitted, and if so, advances the game stage to "main"
+   *  4. Triggers UI routing to ensure all drawings are shown
+   */
   async function handleDrawingSubmit(dataUrl) {
     if (!currentUser || !gameId || !gameTopic) return;
     const path =
       "games/" + gameId + "/drawings/" + currentUser.userId + "_" + Date.now() + ".png";
     const sref = storageRef(storage, path);
-    await uploadString(sref, dataUrl, "data_url");
-    const url = await getDownloadURL(sref);
+    let url;
+    try {
+      await uploadString(sref, dataUrl, "data_url");
+      url = await getDownloadURL(sref);
+    } catch (e) {
+      alert("There was an error saving your drawing. Please try again. " + e.message);
+      return;
+    }
+
+    // Save drawing in Firestore (with doc id as userId for dedup)
     await setDoc(
       doc(db, "games", gameId, "drawings", currentUser.userId),
       {
@@ -264,7 +279,25 @@ function App() {
       drawingURL: url,
       topic: gameTopic,
     });
-    // Do not advance stage: wait for admin or timer to trigger phase switch
+
+    // After storing drawing: check if all players have submitted
+    // 1. Get all players
+    const playersSnap = await getDocs(collection(db, "games", gameId, "players"));
+    const playerIds = playersSnap.docs.map(doc => doc.id);
+    // 2. Get all drawings
+    const drawingsSnap = await getDocs(collection(db, "games", gameId, "drawings"));
+    const drawingIds = drawingsSnap.docs.map(doc => doc.id);
+
+    // 3. If all players have a drawing, advance stage to "main" (guessing phase)
+    // (If enabled for single-player test, still proceed)
+    const allSubmitted = playerIds.every(pid => drawingIds.includes(pid)) && playerIds.length > 0;
+    if (allSubmitted) {
+      await updateDoc(doc(db, "games", gameId), {
+        status: "main" // Could also be "guessing"
+      });
+      setAppStage("main");
+    }
+    // Otherwise, UI will update showing Doodle Submitted, waiting for others...
   }
 
   // --- Guess submission for a drawing ---
