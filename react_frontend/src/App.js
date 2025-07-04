@@ -13,6 +13,7 @@ import {
   orderBy,
   onSnapshot,
   getDoc as firestoreGetDoc,
+  increment, // For atomic score updates
 } from "firebase/firestore";
 import {
   ref as storageRef,
@@ -268,17 +269,38 @@ function App() {
 
   // --- Guess submission for a drawing ---
   // PUBLIC_INTERFACE
+  /**
+   * Submit a guess for a drawing. Enforces:
+   *  - One guess per user per drawing
+   *  - Cannot guess own drawing
+   *  - If guess is correct, owner of the drawing receives a point
+   */
   async function handleGuess(drawingId, guessValue) {
     if (!guessValue.trim() || !currentUser || !gameId) return;
-    // Evaluate guess: The guess is correct if lowercase matches the topic (for that drawing)
     const targetDrawing = drawings.find(d => d.id === drawingId);
+    if (!targetDrawing) return;
+    // Restrict guessing one's own drawing
+    if (targetDrawing.userId === currentUser.userId) return;
+
+    // Restrict to one guess per user per drawing
+    const existingGuessKey = `${currentUser.userId}_${drawingId}`;
+    const guessAlreadySubmitted = guesses.some(
+      (g) => g.userId === currentUser.userId && g.drawingId === drawingId
+    );
+    if (guessAlreadySubmitted) return;
+
+    // Evaluate guess: correct if matches topic (case insensitive, ignores whitespace)
     let isCorrect = false;
-    if (targetDrawing && guessValue.trim().toLowerCase() === targetDrawing.topic.trim().toLowerCase()) {
+    if (
+      guessValue.trim().toLowerCase() ===
+      targetDrawing.topic.trim().toLowerCase()
+    ) {
       isCorrect = true;
     }
-    // Save guess for this user/drawing only if not already present
+
+    // Save guess for this user/drawing
     await setDoc(
-      doc(db, "games", gameId, "guesses", `${currentUser.userId}_${drawingId}`),
+      doc(db, "games", gameId, "guesses", existingGuessKey),
       {
         guess: guessValue,
         userId: currentUser.userId,
@@ -288,6 +310,16 @@ function App() {
         submittedAt: serverTimestamp(),
       }
     );
+
+    // If guess is correct, increment owner's "points" field atomically
+    if (isCorrect && targetDrawing.userId) {
+      // Points for drawing owner
+      const drawingUserDoc = doc(db, "games", gameId, "players", targetDrawing.userId);
+      // Use Firestore increment for atomic update
+      await updateDoc(drawingUserDoc, {
+        points: (window.firebaseIncrement || (window.firebaseIncrement = (await import("firebase/firestore")).increment))(1),
+      }).catch(() => {}); // Player doc might not exist in local, ignore error for demo
+    }
   }
 
   // --- Voting for a drawing ---

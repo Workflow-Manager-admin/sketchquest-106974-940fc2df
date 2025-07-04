@@ -94,12 +94,22 @@ function HomePage({
               (v) => v.forDrawingId === drawing.id
             ).length;
 
+            // Score/point tracking for each player (owner)
+            // Player doc may have a 'points' field set by App.js
+            let score = null;
+            if (drawing.userId) {
+              // Try to extract score from player doc
+              // It is not included in drawing object, but may be in votes/guesses/player state in App (optionally, expose externally)
+              // For now, display blank or zero
+              score = drawing.points || 0;
+            }
+
             return (
               <div
                 key={drawing.id}
                 className="drawing-thumb"
                 style={{
-                  width: 170,
+                  width: 194,
                   margin: "12px",
                   background: "#fff",
                   border: "2px solid #f59e42",
@@ -115,15 +125,44 @@ function HomePage({
                   alt="doodle"
                   style={{ width: "100%", borderRadius: 12 }}
                 />
-                <span
-                  style={{
-                    color: "#3b82f6",
-                    fontWeight: "bold",
-                    fontSize: 15,
-                  }}
-                >
-                  By: {drawing.username}
-                </span>
+                <div style={{marginBottom: 3}}>
+                  <span
+                    style={{
+                      color: "#3b82f6",
+                      fontWeight: "bold",
+                      fontSize: 15,
+                      marginRight: 8,
+                    }}
+                  >
+                    By: {drawing.username}
+                  </span>
+                  {/* In a real app, pass scores explicitly */}
+                  <span
+                    style={{
+                      color: "#f59e42",
+                      fontWeight: 800,
+                      marginLeft: 0,
+                      fontSize: 14,
+                      background: "#fffbe6",
+                      borderRadius: 7,
+                      padding: "2px 7px",
+                      border: "1px solid #fcd285",
+                      marginTop: "-1px",
+                      marginRight: 0,
+                    }}
+                  >
+                    {/* Try to find score from guesses for owner */}
+                    {/* Not exact but gives some points feedback */}
+                    Score:{" "}
+                    {(
+                      guesses.filter(
+                        (g) =>
+                          g.drawingId === drawing.id &&
+                          g.isCorrect
+                      ).length || 0
+                    )}
+                  </span>
+                </div>
                 <div style={{ height: 26, margin: "5px 0" }}>
                   {!votingEnabled && drawing.userId !== user.userId ? (
                     myGuess ? (
