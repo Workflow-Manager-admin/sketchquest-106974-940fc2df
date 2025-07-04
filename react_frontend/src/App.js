@@ -1,12 +1,121 @@
+/**
+ * All import statements are now located at the very top of this file per ESLint and React best practices.
+ * All React hooks (useState, useEffect, useRef) are *only* called at the top level of their containing components.
+ * No import statements or hook calls are present inside conditionals or after early returns.
+ */
 import React, { useState, useEffect, useRef } from "react";
-import { increment as firestoreIncrement } from "firebase/firestore";
-
+import "./App.css";
 import LoginPage from "./components/LoginPage";
 import SpinningWheelPanel from "./components/SpinningWheelPanel";
 import HomePage from "./components/HomePage";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  getDocs,
+  updateDoc,
+  doc,
+  serverTimestamp,
+  query,
+  orderBy,
+  onSnapshot,
+  getDoc as firestoreGetDoc,
+  increment as firestoreIncrement, // Alias to match usage below
+} from "firebase/firestore";
+import {
+  ref as storageRef,
+  uploadString,
+  getDownloadURL,
+} from "firebase/storage";
+import { db, storage } from "./firebase";
 
+// --- Game topics and config ---
+const GAME_TOPICS = [
+  "Penguin", "Owl", "Parrot", "Elephant", "Kangaroo", "Lion",
+  "Cat", "Dog", "Flamingo", "Peacock", "Raccoon", "Rabbit", "Fish",
+  "Giraffe", "Tiger", "Frog", "Crab", "Horse", "Eagle", "Swan"
+];
+const DRAW_TIME = 30; // seconds
+
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+// --- App Main ---
+/**
+ * ErrorBoundary and error-recovery helpers: must be defined before App is called to avoid "is not defined".
+ */
+
+// Error boundary for app-wide fatal errors
+class AppErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error: error, errorInfo: null };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    this.setState({ error, errorInfo });
+    if (window && window.console) console.error("App Fatal Error:", error, errorInfo);
+  }
+
+  handleReload = () => window.location.reload();
+  handleReturnToLogin = () => {
+    localStorage.removeItem("doodleFinderUser");
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="app-center" style={{ minHeight: "100vh", color: "#888" }}>
+          <div className="navbar"
+            style={{
+              fontFamily: "Comic Sans MS, Comic Sans, cursive",
+              fontSize: 30,
+              letterSpacing: 2,
+              fontWeight: 900,
+              color: "#3b82f6",
+              margin: "20px 0 28px 0",
+              textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
+            }}>
+            <span style={{ color: "#3b82f6" }}>Doodle</span>
+            <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
+            <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
+          </div>
+          <h2 style={{ margin: "40px 0 12px", color: "#d22" }}>
+            A critical error occurred.
+          </h2>
+          <div style={{ color: "#aa1111", marginBottom: 18, whiteSpace: "pre-line" }}>
+            {this.state.error ? String(this.state.error) : "Unknown error"}
+          </div>
+          <button className="btn" style={{
+            background: "#3b82f6", color: "#fff", fontSize: 17,
+            borderRadius: 8, padding: "10px 28px", marginRight: 7,
+          }} onClick={this.handleReturnToLogin}>
+            Return to Login
+          </button>
+          <button className="btn" style={{
+            background: "#f59e42", color: "#fff", fontSize: 17,
+            borderRadius: 8, padding: "10px 28px", marginLeft: 7
+          }} onClick={this.handleReload}>
+            Refresh App
+          </button>
+          <div style={{ marginTop: 26, fontSize: 13, color: "#888" }}>
+            If this keeps happening, please report it!
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// Missing drawing recovery component for interrupted sessions
 function MissingDrawingRecovery({ setCurrentUser, setAppStage }) {
-  // Hooks at top level
   const [rejoining, setRejoining] = useState(false);
   const errorReason =
     "Your drawing could not be found for this round. This may occur if you reloaded at an unfortunate moment or there was a connection problem.";
@@ -74,114 +183,6 @@ function MissingDrawingRecovery({ setCurrentUser, setAppStage }) {
       </div>
     </div>
   );
-}
-
-/**
- * AppErrorBoundary - React Error Boundary for user-facing error feedback
- */
-class AppErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error: error, errorInfo: null };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    this.setState({ error, errorInfo });
-    if (window && window.console) console.error("App Fatal Error:", error, errorInfo);
-  }
-
-  handleReload = () => window.location.reload();
-  handleReturnToLogin = () => {
-    localStorage.removeItem("doodleFinderUser");
-    window.location.reload();
-  };
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="app-center" style={{ minHeight: "100vh", color: "#888" }}>
-          <div className="navbar"
-            style={{
-              fontFamily: "Comic Sans MS, Comic Sans, cursive",
-              fontSize: 30,
-              letterSpacing: 2,
-              fontWeight: 900,
-              color: "#3b82f6",
-              margin: "20px 0 28px 0",
-              textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
-            }}>
-            <span style={{ color: "#3b82f6" }}>Doodle</span>
-            <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
-            <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
-          </div>
-          <h2 style={{ margin: "40px 0 12px", color: "#d22" }}>
-            A critical error occurred.
-          </h2>
-          <div style={{ color: "#aa1111", marginBottom: 18, whiteSpace: "pre-line" }}>
-            {this.state.error ? String(this.state.error) : "Unknown error"}
-          </div>
-          <button className="btn" style={{
-            background: "#3b82f6", color: "#fff", fontSize: 17,
-            borderRadius: 8, padding: "10px 28px", marginRight: 7,
-          }} onClick={this.handleReturnToLogin}>
-            Return to Login
-          </button>
-          <button className="btn" style={{
-            background: "#f59e42", color: "#fff", fontSize: 17,
-            borderRadius: 8, padding: "10px 28px", marginLeft: 7
-          }} onClick={this.handleReload}>
-            Refresh App
-          </button>
-          <div style={{ marginTop: 26, fontSize: 13, color: "#888" }}>
-            If this keeps happening, please report it!
-          </div>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-import "./App.css";
-
-import {
-  collection,
-  addDoc,
-  setDoc,
-  getDocs,
-  updateDoc,
-  doc,
-  serverTimestamp,
-  query,
-  orderBy,
-  onSnapshot,
-  getDoc as firestoreGetDoc,
-  increment, // For atomic score updates
-} from "firebase/firestore";
-import {
-  ref as storageRef,
-  uploadString,
-  getDownloadURL,
-} from "firebase/storage";
-
-// Modular imports
-import LoginPage from "./components/LoginPage";
-import SpinningWheelPanel from "./components/SpinningWheelPanel";
-import HomePage from "./components/HomePage";
-
-// Game topics and config
-const GAME_TOPICS = [
-  "Penguin", "Owl", "Parrot", "Elephant", "Kangaroo", "Lion",
-  "Cat", "Dog", "Flamingo", "Peacock", "Raccoon", "Rabbit", "Fish",
-  "Giraffe", "Tiger", "Frog", "Crab", "Horse", "Eagle", "Swan"
-];
-const DRAW_TIME = 30; // seconds
-
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
 }
 
 // --- App Main ---

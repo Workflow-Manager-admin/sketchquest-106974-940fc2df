@@ -6,758 +6,11 @@ Attempting to bind to HOST environment variable: 0.0.0.0
 If this was unintentional, check that you haven't mistakenly set it in your shell.
 Learn more here: https://cra.link/advanced-config
 
-(node:16426) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:19359) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:16426) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:19359) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
-Compiled successfully!
-
-You can now view react-kavia in the browser.
-
-  Local:            http://localhost:3000
-  On Your Network:  http://172.17.0.2:3000
-
-Note that the development build is not optimized.
-To create a production build, use npm run build.
-
-webpack compiled successfully
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 485:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 486:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 15:13:    'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 16:3:     'increment' is defined but never used                  no-unused-vars
-  Line 61:10:    'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 62:10:    'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 485:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 486:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 694:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 810:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1017:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1111:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1196:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 485:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 486:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 575:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 576:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 6:7:      'AppErrorBoundary' is defined but never used           no-unused-vars
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 575:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 576:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 784:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 900:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1107:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1201:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1286:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 575:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 576:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 575:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 576:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 575:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 576:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 790:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 906:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1113:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1207:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1292:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 575:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 576:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 580:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 581:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 580:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 581:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 795:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 911:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1118:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1212:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1297:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 580:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 581:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 584:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 585:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 584:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 585:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 799:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 915:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1122:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1216:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1301:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 584:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 585:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 589:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 590:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 589:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 590:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 804:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 920:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1127:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1221:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1306:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 589:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 590:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 593:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 594:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 593:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 594:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 808:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 924:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1131:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1225:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1310:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 593:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 594:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 597:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 598:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 597:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 598:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 812:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 928:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1135:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1229:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1314:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 597:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 598:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 601:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 602:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 105:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 106:3:    'increment' is defined but never used                  no-unused-vars
-  Line 151:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 152:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 601:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 602:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 816:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 932:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1139:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1233:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1318:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 92:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 93:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 94:1:    Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 108:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 115:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 116:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 117:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 601:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 602:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 144:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 145:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 146:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 160:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 167:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 168:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 169:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 653:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 654:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 2:23:     'firestoreIncrement' is defined but never used         no-unused-vars
-  Line 4:10:     'MissingDrawingRecovery' is defined but never used     no-unused-vars
-  Line 6:21:     'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 157:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 158:3:    'increment' is defined but never used                  no-unused-vars
-  Line 203:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 204:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 653:27:   'setErrorReason' is assigned a value but never used    no-unused-vars
-  Line 654:25:   'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 868:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 984:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1191:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1285:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1370:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 144:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 145:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 146:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 160:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 167:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 168:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 169:1:   Import in body of module; reorder to top                                                                                                                                                    import/first
-  Line 653:45:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-  Line 654:41:  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 144:1:  Import in body of module; reorder to top  import/first
-  Line 145:1:  Import in body of module; reorder to top  import/first
-  Line 146:1:  Import in body of module; reorder to top  import/first
-  Line 160:1:  Import in body of module; reorder to top  import/first
-  Line 167:1:  Import in body of module; reorder to top  import/first
-  Line 168:1:  Import in body of module; reorder to top  import/first
-  Line 169:1:  Import in body of module; reorder to top  import/first
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 2:23:     'firestoreIncrement' is defined but never used         no-unused-vars
-  Line 6:21:     'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 157:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 158:3:    'increment' is defined but never used                  no-unused-vars
-  Line 203:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 204:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 800:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 916:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1123:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1217:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1302:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 144:1:  Import in body of module; reorder to top  import/first
-  Line 145:1:  Import in body of module; reorder to top  import/first
-  Line 146:1:  Import in body of module; reorder to top  import/first
-  Line 160:1:  Import in body of module; reorder to top  import/first
-  Line 167:1:  Import in body of module; reorder to top  import/first
-  Line 168:1:  Import in body of module; reorder to top  import/first
-  Line 169:1:  Import in body of module; reorder to top  import/first
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 144:1:  Import in body of module; reorder to top  import/first
-  Line 145:1:  Import in body of module; reorder to top  import/first
-  Line 146:1:  Import in body of module; reorder to top  import/first
-  Line 160:1:  Import in body of module; reorder to top  import/first
-  Line 167:1:  Import in body of module; reorder to top  import/first
-  Line 168:1:  Import in body of module; reorder to top  import/first
-  Line 169:1:  Import in body of module; reorder to top  import/first
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 6:21:     'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 157:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 158:3:    'increment' is defined but never used                  no-unused-vars
-  Line 203:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 204:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 800:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 916:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1123:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1217:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1302:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 144:1:  Import in body of module; reorder to top  import/first
-  Line 145:1:  Import in body of module; reorder to top  import/first
-  Line 146:1:  Import in body of module; reorder to top  import/first
-  Line 160:1:  Import in body of module; reorder to top  import/first
-  Line 167:1:  Import in body of module; reorder to top  import/first
-  Line 168:1:  Import in body of module; reorder to top  import/first
-  Line 169:1:  Import in body of module; reorder to top  import/first
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-Syntax error: Identifier 'collection' has already been declared. (148:2) (148:2)
-ERROR in ./src/App.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/src/App.js: Identifier 'collection' has already been declared. (148:2)
-
-  146 | import { db, storage } from "./firebase";
-  147 | import {
-> 148 |   collection,
-      |   ^
-  149 |   addDoc,
-  150 |   setDoc,
-  151 |   getDocs,
-    at constructor (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:360:19)
-    at FlowParserMixin.raise (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:3327:19)
-    at FlowScopeHandler.checkRedeclarationInScope (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1555:19)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1521:12)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1622:11)
-    at FlowParserMixin.declareNameFromIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7476:16)
-    at FlowParserMixin.checkIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7472:12)
-    at FlowParserMixin.checkLVal (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7413:12)
-    at FlowParserMixin.finishImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13898:10)
-    at FlowParserMixin.parseImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5680:17)
-    at FlowParserMixin.parseNamedImportSpecifiers (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14033:36)
-    at FlowParserMixin.parseImportSpecifiersAndAfter (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13875:37)
-    at FlowParserMixin.parseImport (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13868:17)
-    at FlowParserMixin.parseStatementContent (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12514:27)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12406:17)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5140:24)
-    at FlowParserMixin.parseModuleItem (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12383:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12960:36)
-    at FlowParserMixin.parseBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12953:10)
-    at FlowParserMixin.parseProgram (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12280:10)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12270:25)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5909:28)
-    at FlowParserMixin.parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14120:10)
-    at parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14154:38)
-    at parser (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/parser/index.js:41:34)
-    at parser.next (<anonymous>)
-    at normalizeFile (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
-    at normalizeFile.next (<anonymous>)
-    at run (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/index.js:22:50)
-    at run.next (<anonymous>)
-    at transform (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transform.js:22:33)
-    at transform.next (<anonymous>)
-    at step (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:261:32)
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:273:13
-    at async.call.result.err.err (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:223:11)
-
-ERROR in [eslint] 
-src/App.js
-  Line 148:2:  Parsing error: Identifier 'collection' has already been declared. (148:2)
-
-webpack compiled with 2 errors
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-Syntax error: Identifier 'collection' has already been declared. (148:2) (148:2)
-ERROR in ./src/App.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/src/App.js: Identifier 'collection' has already been declared. (148:2)
-
-  146 | import { db, storage } from "./firebase";
-  147 | import {
-> 148 |   collection,
-      |   ^
-  149 |   addDoc,
-  150 |   setDoc,
-  151 |   getDocs,
-    at constructor (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:360:19)
-    at FlowParserMixin.raise (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:3327:19)
-    at FlowScopeHandler.checkRedeclarationInScope (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1555:19)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1521:12)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1622:11)
-    at FlowParserMixin.declareNameFromIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7476:16)
-    at FlowParserMixin.checkIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7472:12)
-    at FlowParserMixin.checkLVal (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7413:12)
-    at FlowParserMixin.finishImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13898:10)
-    at FlowParserMixin.parseImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5680:17)
-    at FlowParserMixin.parseNamedImportSpecifiers (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14033:36)
-    at FlowParserMixin.parseImportSpecifiersAndAfter (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13875:37)
-    at FlowParserMixin.parseImport (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13868:17)
-    at FlowParserMixin.parseStatementContent (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12514:27)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12406:17)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5140:24)
-    at FlowParserMixin.parseModuleItem (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12383:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12960:36)
-    at FlowParserMixin.parseBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12953:10)
-    at FlowParserMixin.parseProgram (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12280:10)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12270:25)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5909:28)
-    at FlowParserMixin.parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14120:10)
-    at parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14154:38)
-    at parser (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/parser/index.js:41:34)
-    at parser.next (<anonymous>)
-    at normalizeFile (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
-    at normalizeFile.next (<anonymous>)
-    at run (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/index.js:22:50)
-    at run.next (<anonymous>)
-    at transform (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transform.js:22:33)
-    at transform.next (<anonymous>)
-    at step (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:261:32)
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:273:13
-    at async.call.result.err.err (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:223:11)
-
-ERROR in [eslint] 
-src/App.js
-  Line 148:2:  Parsing error: Identifier 'collection' has already been declared. (148:2)
-
-webpack compiled with 2 errors
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-  Line 144:1:  Import in body of module; reorder to top  import/first
-  Line 145:1:  Import in body of module; reorder to top  import/first
-  Line 146:1:  Import in body of module; reorder to top  import/first
-  Line 160:1:  Import in body of module; reorder to top  import/first
-  Line 167:1:  Import in body of module; reorder to top  import/first
-  Line 168:1:  Import in body of module; reorder to top  import/first
-  Line 169:1:  Import in body of module; reorder to top  import/first
-
-Search for the keywords to learn more about each error.
-WARNING in [eslint] 
-src/App.js
-  Line 6:21:     'setRejoining' is assigned a value but never used      no-unused-vars
-  Line 157:13:   'firestoreGetDoc' is defined but never used            no-unused-vars
-  Line 158:3:    'increment' is defined but never used                  no-unused-vars
-  Line 203:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
-  Line 204:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
-  Line 800:10:   'TopicSpinner' is defined but never used               no-unused-vars
-  Line 916:10:   'DrawingPanel' is defined but never used               no-unused-vars
-  Line 1123:10:  'GuessingPanel' is defined but never used              no-unused-vars
-  Line 1217:10:  'VotingPanel' is defined but never used                no-unused-vars
-  Line 1302:10:  'WinnerPanel' is defined but never used                no-unused-vars
-
-ERROR in [eslint] 
-src/App.js
-  Line 144:1:  Import in body of module; reorder to top  import/first
-  Line 145:1:  Import in body of module; reorder to top  import/first
-  Line 146:1:  Import in body of module; reorder to top  import/first
-  Line 160:1:  Import in body of module; reorder to top  import/first
-  Line 167:1:  Import in body of module; reorder to top  import/first
-  Line 168:1:  Import in body of module; reorder to top  import/first
-  Line 169:1:  Import in body of module; reorder to top  import/first
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 1 warning
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/App.js
-Syntax error: Identifier 'db' has already been declared. (149:9) (149:9)
-ERROR in ./src/App.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/src/App.js: Identifier 'db' has already been declared. (149:9)
-
-  147 | }
-  148 | import "./App.css";
-> 149 | import { db, storage } from "./firebase";
-      |          ^
-  150 | import {
-  151 |   collection,
-  152 |   addDoc,
-    at constructor (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:360:19)
-    at FlowParserMixin.raise (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:3327:19)
-    at FlowScopeHandler.checkRedeclarationInScope (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1555:19)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1521:12)
-    at FlowScopeHandler.declareName (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:1622:11)
-    at FlowParserMixin.declareNameFromIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7476:16)
-    at FlowParserMixin.checkIdentifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7472:12)
-    at FlowParserMixin.checkLVal (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:7413:12)
-    at FlowParserMixin.finishImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13898:10)
-    at FlowParserMixin.parseImportSpecifier (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5680:17)
-    at FlowParserMixin.parseNamedImportSpecifiers (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14033:36)
-    at FlowParserMixin.parseImportSpecifiersAndAfter (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13875:37)
-    at FlowParserMixin.parseImport (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:13868:17)
-    at FlowParserMixin.parseStatementContent (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12514:27)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12406:17)
-    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5140:24)
-    at FlowParserMixin.parseModuleItem (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12383:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12960:36)
-    at FlowParserMixin.parseBlockBody (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12953:10)
-    at FlowParserMixin.parseProgram (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12280:10)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:12270:25)
-    at FlowParserMixin.parseTopLevel (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:5909:28)
-    at FlowParserMixin.parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14120:10)
-    at parse (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/parser/lib/index.js:14154:38)
-    at parser (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/parser/index.js:41:34)
-    at parser.next (<anonymous>)
-    at normalizeFile (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
-    at normalizeFile.next (<anonymous>)
-    at run (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transformation/index.js:22:50)
-    at run.next (<anonymous>)
-    at transform (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/transform.js:22:33)
-    at transform.next (<anonymous>)
-    at step (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:261:32)
-    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:273:13
-    at async.call.result.err.err (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:223:11)
-
-ERROR in [eslint] 
-src/App.js
-  Line 149:9:  Parsing error: Identifier 'db' has already been declared. (149:9)
-
-webpack compiled with 2 errors
-Compiling...
 Failed to compile.
 
 [eslint] 
@@ -809,9 +62,74 @@ SyntaxError: /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/r
     at step (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:261:32)
     at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:273:13
     at async.call.result.err.err (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:223:11)
+    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:189:28
+    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:113:33
+    at step (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:287:14)
+    at /home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:273:13
+    at async.call.result.err.err (/home/kavia/workspace/code-generation/sketchquest-106974-940fc2df/react_frontend/node_modules/gensync/index.js:223:11)
 
 ERROR in [eslint] 
 src/App.js
   Line 171:7:  Parsing error: Identifier 'LoginPage' has already been declared. (171:7)
 
 webpack compiled with 2 errors
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.js
+  Line 514:10:  'MissingDrawingRecovery' is not defined  react/jsx-no-undef
+  Line 653:4:   'AppErrorBoundary' is not defined        react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/App.js
+  Line 22:13:    'firestoreGetDoc' is defined but never used            no-unused-vars
+  Line 64:10:    'votingEnabled' is assigned a value but never used     no-unused-vars
+  Line 65:10:    'roundTimerActive' is assigned a value but never used  no-unused-vars
+  Line 661:10:   'TopicSpinner' is defined but never used               no-unused-vars
+  Line 777:10:   'DrawingPanel' is defined but never used               no-unused-vars
+  Line 984:10:   'GuessingPanel' is defined but never used              no-unused-vars
+  Line 1078:10:  'VotingPanel' is defined but never used                no-unused-vars
+  Line 1163:10:  'WinnerPanel' is defined but never used                no-unused-vars
+
+ERROR in [eslint] 
+src/App.js
+  Line 514:10:  'MissingDrawingRecovery' is not defined  react/jsx-no-undef
+  Line 653:4:   'AppErrorBoundary' is not defined        react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.js
+  Line 22:13:    'firestoreGetDoc' is defined but never used            no-unused-vars
+  Line 119:21:   'setRejoining' is assigned a value but never used      no-unused-vars
+  Line 208:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
+  Line 209:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
+  Line 805:10:   'TopicSpinner' is defined but never used               no-unused-vars
+  Line 921:10:   'DrawingPanel' is defined but never used               no-unused-vars
+  Line 1128:10:  'GuessingPanel' is defined but never used              no-unused-vars
+  Line 1222:10:  'VotingPanel' is defined but never used                no-unused-vars
+  Line 1307:10:  'WinnerPanel' is defined but never used                no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.js
+  Line 22:13:    'firestoreGetDoc' is defined but never used            no-unused-vars
+  Line 119:21:   'setRejoining' is assigned a value but never used      no-unused-vars
+  Line 208:10:   'votingEnabled' is assigned a value but never used     no-unused-vars
+  Line 209:10:   'roundTimerActive' is assigned a value but never used  no-unused-vars
+  Line 805:10:   'TopicSpinner' is defined but never used               no-unused-vars
+  Line 921:10:   'DrawingPanel' is defined but never used               no-unused-vars
+  Line 1128:10:  'GuessingPanel' is defined but never used              no-unused-vars
+  Line 1222:10:  'VotingPanel' is defined but never used                no-unused-vars
+  Line 1307:10:  'WinnerPanel' is defined but never used                no-unused-vars
+
+webpack compiled with 1 warning
