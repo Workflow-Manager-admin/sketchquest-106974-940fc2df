@@ -679,6 +679,7 @@ function Wheel({ topics, spin }) {
 function DrawingPanel({ topic, onSubmit, countdown, myDrawingData, accentColor }) {
   const [submitted, setSubmitted] = useState(false);
   const [drawingDataUrl, setDrawingDataUrl] = useState(null);
+
   const submitDrawing = async () => {
     if (!drawingDataUrl) {
       alert("Draw something before submitting!");
@@ -687,65 +688,89 @@ function DrawingPanel({ topic, onSubmit, countdown, myDrawingData, accentColor }
     await onSubmit(drawingDataUrl);
     setSubmitted(true);
   };
-  if (submitted || myDrawingData)
-    return (
-      <div className="app-center">
-        <GameHeader />
-        <div className="card" style={{ background: "#f8f6f1", padding: 30 }}>
-          <h2 style={{ color: "#3b82f6" }}>Doodle Submitted!</h2>
-          <div style={{ fontSize: 18, color: "#666", margin: "18px 0" }}>
-            Waiting for others to finish...
-          </div>
-          <img
-            src={myDrawingData?.drawingURL || drawingDataUrl}
-            alt="your doodle"
-            style={{
-              width: "235px",
-              boxShadow: "0 2px 16px 0 #eccc9c",
-              border: "4px solid #f59e42",
-              margin: "16px 0",
-            }}
-          />
-          <br />
-          <span style={{ color: "#999", fontSize: 15 }}>
-            Topic: <span style={{ color: accentColor }}>{topic}</span>
-          </span>
-        </div>
-      </div>
-    );
+
+  // The topic should be visible to the user whether before or after submission
   return (
     <div className="app-center">
       <GameHeader />
-      <div className="card" style={{ padding: 30, borderRadius: 18, background: "#fcfdfd", margin: "0 auto" }}>
-        <h2 style={{ color: "#3b82f6" }}>
-          Draw this:{" "}
-          <span style={{ color: accentColor, fontFamily: "Comic Sans MS, cursive" }}>
-            {topic}
+      <div
+        className="card"
+        style={{
+          background: submitted || myDrawingData ? "#f8f6f1" : "#fcfdfd",
+          padding: 30,
+          borderRadius: 18,
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: 14 }}>
+          <span
+            style={{
+              display: "inline-block",
+              background: "#fff6e6",
+              color: accentColor,
+              borderRadius: 12,
+              padding: "8px 18px",
+              fontWeight: 800,
+              fontSize: 22,
+              fontFamily: "Comic Sans MS, Comic Sans, cursive",
+              letterSpacing: 2,
+              boxShadow: "0px 1px 7px #f59e427e",
+              border: `2.2px solid ${accentColor}`,
+            }}
+          >
+            Topic:&nbsp;{topic}
           </span>
-        </h2>
-        <div style={{ marginBottom: 22, fontSize: 17, color: "#888" }}>
-          You have <b style={{ color: "#f59e42" }}>{countdown}</b> seconds!
         </div>
-        <DoodleCanvas
-          submitCb={setDrawingDataUrl}
-          disabled={submitted}
-        />
-        <button
-          className="btn"
-          style={{
-            background: accentColor,
-            color: "#fff",
-            padding: "10px 34px",
-            marginTop: 18,
-            fontSize: 18,
-            borderRadius: 8,
-            fontWeight: 700,
-          }}
-          disabled={!drawingDataUrl || submitted}
-          onClick={submitDrawing}
-        >
-          Submit Drawing
-        </button>
+
+        {!submitted && !myDrawingData && (
+          <>
+            <h2 style={{ color: "#3b82f6" }}>
+              Draw this!
+            </h2>
+            <div style={{ marginBottom: 22, fontSize: 17, color: "#888" }}>
+              You have <b style={{ color: "#f59e42" }}>{countdown}</b> seconds!
+            </div>
+            <DoodleCanvas
+              submitCb={setDrawingDataUrl}
+              disabled={submitted}
+            />
+            <button
+              className="btn"
+              style={{
+                background: accentColor,
+                color: "#fff",
+                padding: "10px 34px",
+                marginTop: 18,
+                fontSize: 18,
+                borderRadius: 8,
+                fontWeight: 700,
+              }}
+              disabled={!drawingDataUrl || submitted}
+              onClick={submitDrawing}
+            >
+              Submit Drawing
+            </button>
+          </>
+        )}
+
+        {(submitted || myDrawingData) && (
+          <>
+            <h2 style={{ color: "#3b82f6" }}>Doodle Submitted!</h2>
+            <div style={{ fontSize: 18, color: "#666", margin: "18px 0" }}>
+              Waiting for others to finish...
+            </div>
+            <img
+              src={myDrawingData?.drawingURL || drawingDataUrl}
+              alt="your doodle"
+              style={{
+                width: "235px",
+                boxShadow: "0 2px 16px 0 #eccc9c",
+                border: "4px solid #f59e42",
+                margin: "16px 0",
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );
