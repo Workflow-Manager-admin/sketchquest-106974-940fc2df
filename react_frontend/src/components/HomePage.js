@@ -12,6 +12,20 @@ import React from "react";
  *  - votingEnabled: boolean (whether voting is currently available)
  *  - roundTimer: seconds remaining for round (optional)
  */
+/**
+ * HomePage - Displays all submitted drawings, allows guessing (once per drawing, no self-guess), shows colored feedback, allows real-time votes.
+ * Props:
+ *  - user: current user {username, userId}
+ *  - drawings: [{id, userId, username, drawingURL, topic, votes}]
+ *  - guesses: [{userId, username, guess, drawingId, isCorrect}]
+ *  - votes: [{userId, forDrawingId}]
+ *  - onGuess(drawingId, guessValue): triggers a guess; only allowed if user hasn't guessed that drawing.
+ *  - onVote(drawingId): cast a vote for a drawing; only once, not own drawing.
+ *  - votingEnabled: boolean (whether voting is currently available)
+ *  - roundTimer: seconds remaining for round (optional)
+ *  - showGuessInput: boolean (should the guess input/button be displayed)
+ *  - myUserId: string (userId of current user)
+ */
 function HomePage({
   user,
   drawings,
@@ -21,6 +35,8 @@ function HomePage({
   onVote,
   votingEnabled,
   roundTimer,
+  showGuessInput = true,
+  myUserId = null,
 }) {
   // Get a lookup for user guesses by drawing
   const userGuessesByDrawing = {};
@@ -164,7 +180,9 @@ function HomePage({
                   </span>
                 </div>
                 <div style={{ height: 26, margin: "5px 0" }}>
-                  {!votingEnabled && drawing.userId !== user.userId ? (
+                  {!votingEnabled &&
+                    drawing.userId !== user.userId &&
+                    showGuessInput ? (
                     myGuess ? (
                       <span
                         style={{

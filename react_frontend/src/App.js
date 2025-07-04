@@ -471,18 +471,47 @@ function App() {
     );
   }
 
-  // Main Home Guess/Results Round
+  // --- ENFORCED USER FLOW FOR COMPETITION/RESULTS ---
+  // HomePage: Only show guess input if at least one drawing is not by the current user
   if (appStage === "main" || appStage === "guessing") {
+    // Detect if there is at least one other user's drawing
+    const otherDrawings = drawings.filter(
+      (d) => currentUser && d.userId !== currentUser.userId
+    );
+    // If user's own drawing not found (e.g., reload mid-round), soft fallback (shouldn't occur in normal play)
+    if (!myDrawing) {
+      return (
+        <div className="app-center" style={{ minHeight: "100vh", color: "#888" }}>
+          <div className="navbar"
+            style={{
+              fontFamily: "Comic Sans MS, Comic Sans, cursive",
+              fontSize: 30,
+              letterSpacing: 2,
+              fontWeight: 900,
+              color: "#3b82f6",
+              margin: "20px 0 28px 0",
+              textShadow: "1px 3px 0 #fff, 0 4px 12px #c9e7ff",
+            }}>
+            <span style={{ color: "#3b82f6" }}>Doodle</span>
+            <span style={{ color: "#f59e42", marginLeft: 8 }}>Finder</span>
+            <span style={{ color: "#2ad389", marginLeft: 18, fontSize: 17 }}>LIVE</span>
+          </div>
+          <h2>Something went wrong. Please refresh and re-join.</h2>
+        </div>
+      );
+    }
     return (
       <HomePage
         user={currentUser}
         drawings={drawings}
         guesses={guesses}
         votes={votes}
-        onGuess={handleGuess}
+        onGuess={otherDrawings.length === 0 ? () => {} : handleGuess}
         onVote={handleVote}
         votingEnabled={false}
         roundTimer={null}
+        showGuessInput={otherDrawings.length !== 0}
+        myUserId={currentUser.userId}
       />
     );
   }
